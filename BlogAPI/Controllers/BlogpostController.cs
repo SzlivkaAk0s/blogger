@@ -86,5 +86,27 @@ namespace BlogAPI.Controllers
             return new { message = "Sikeres törlés", result = "" };
         }
 
+        [HttpPut]
+        public object UpdatePost([FromQuery] int id, UpdatePostDTO updatePostDTO)
+        {
+            var connection = new MySqlConnection(ConnectionString);
+
+            connection.Open();
+
+            var sql = @"UPDATE `blogpost` SET `Title`=@title,`Content`=@content,`updateTime`=@updateTime WHERE `Id` = @id;";
+
+            var cmd = new MySqlCommand(sql, connection);
+
+            cmd.Parameters.AddWithValue("@title", updatePostDTO.Title);
+            cmd.Parameters.AddWithValue("@content", updatePostDTO.Content);
+            cmd.Parameters.AddWithValue("@updateTime", DateTime.Now);
+            cmd.Parameters.AddWithValue("@id", id);
+
+            cmd.ExecuteNonQuery();
+
+            connection.Close();
+
+            return new { message = "Sikeres frissítés", result = updatePostDTO };
+        }
     }
 }
