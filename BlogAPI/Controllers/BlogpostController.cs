@@ -1,4 +1,5 @@
 ﻿using BlogAPI.Models;
+using BlogAPI.Models.DTOs;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MySqlConnector;
@@ -42,6 +43,28 @@ namespace BlogAPI.Controllers
             connection.Close();
 
             return posts;
+        }
+        [HttpPost]
+        public object AddNewPost([FromBody]Blogpost AddNewPostDTO)
+        {
+            var connection = new MySqlConnection(ConnectionString);
+
+            connection.Open();
+
+            string sql = @"INSERT INTO `blogpost`(`Title`, `Content`, `postTime`, `updateTime`, `blogId`) VALUES ('[value-2]','[value-3]','[value-4]','[value-5]','[value-6]')";
+
+            var cmd = new MySqlCommand(sql, connection);
+
+            cmd.Parameters.AddWithValue("@title", AddNewPostDTO.Title);
+            cmd.Parameters.AddWithValue("@content", AddNewPostDTO.Content);
+            cmd.Parameters.AddWithValue("@postTime", AddNewPostDTO.postTime);
+            cmd.Parameters.AddWithValue("@updateTime", AddNewPostDTO.updateTime);
+            cmd.Parameters.AddWithValue("@blogId", AddNewPostDTO.blogId);
+
+            cmd.ExecuteNonQuery();
+
+            connection.Close();
+            return new { message = "Sikeres felvétel", result = AddNewPostDTO};
         }
     }
 }
