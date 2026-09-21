@@ -66,5 +66,25 @@ namespace BlogAPI.Controllers
             connection.Close();
             return new { message = "Sikeres felvétel", result = AddNewPostDTO};
         }
+
+        [HttpDelete]
+        public object DeletePost(int id)
+        {
+            var connection = new MySqlConnection(ConnectionString);
+
+            connection.Open();
+
+            string sql = @"DELETE FROM `blogpost` WHERE `id`=@id";
+
+            var cmd = new MySqlCommand(sql, connection);
+
+            cmd.Parameters.AddWithValue("@id", id);
+
+            cmd.ExecuteNonQuery();
+
+            connection.Close();
+            return new { message = "Sikeres törlés", result = "" };
+        }
+
     }
 }
