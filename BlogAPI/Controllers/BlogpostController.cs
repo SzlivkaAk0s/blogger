@@ -45,20 +45,20 @@ namespace BlogAPI.Controllers
             return posts;
         }
         [HttpPost]
-        public object AddNewPost([FromBody]Blogpost AddNewPostDTO)
+        public object AddNewPost([FromBody]AddNewPostDTO AddNewPostDTO)
         {
             var connection = new MySqlConnection(ConnectionString);
 
             connection.Open();
 
-            string sql = @"INSERT INTO `blogpost`(`Title`, `Content`, `postTime`, `updateTime`, `blogId`) VALUES ('[value-2]','[value-3]','[value-4]','[value-5]','[value-6]')";
+            string sql = @"INSERT INTO `blogpost`(`Title`, `Content`, `postTime`,`updateTime`, `blogId`) VALUES (@Title,@Content,@postTime,@updateTime,@blogId)";
 
             var cmd = new MySqlCommand(sql, connection);
 
-            cmd.Parameters.AddWithValue("@title", AddNewPostDTO.Title);
-            cmd.Parameters.AddWithValue("@content", AddNewPostDTO.Content);
-            cmd.Parameters.AddWithValue("@postTime", AddNewPostDTO.postTime);
-            cmd.Parameters.AddWithValue("@updateTime", AddNewPostDTO.updateTime);
+            cmd.Parameters.AddWithValue("@Title", AddNewPostDTO.Title);
+            cmd.Parameters.AddWithValue("@Content", AddNewPostDTO.Content);
+            cmd.Parameters.AddWithValue("@postTime", DateTime.Now);
+            cmd.Parameters.AddWithValue("@updateTime", DateTime.Now);
             cmd.Parameters.AddWithValue("@blogId", AddNewPostDTO.blogId);
 
             cmd.ExecuteNonQuery();
